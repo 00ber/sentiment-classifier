@@ -11,7 +11,7 @@ from optimum.onnxruntime.configuration import AutoQuantizationConfig
 
 # Load the tokenizer and export the model to the ONNX format
 model_id = "models/imbd-roberta-base-sentiment-merged-latest"
-save_dir = "models/onxx-"
+save_dir = "models/onxx"
 
 tokenizer = AutoTokenizer.from_pretrained("cardiffnlp/twitter-roberta-base-sentiment-latest")
 model = ORTModelForSequenceClassification.from_pretrained(model_id, export=True)
@@ -24,13 +24,14 @@ optimized_ver = optimizer.optimize(save_dir=save_dir + "-optimized", optimizatio
 
 qconfig = AutoQuantizationConfig.avx512_vnni(is_static=False, per_channel=True)
 quantizer = ORTQuantizer.from_pretrained(optimized_ver)
-quantizer.quantize(save_dir=save_dir + "-quantized", quantization_config=qconfig)
+quantized = quantizer.quantize(save_dir=save_dir + "-quantized", quantization_config=qconfig)
 
-tokenizer.save_pretrained("models/onxx-optimized-quantized-tokenizer")
-model.save_pretrained("models/onxx-optimized-quantized")
+final_model_path = "models/imbd-roberta-base-sentiment-onxx-latest"
 
-model = ORTModelForSequenceClassification.from_pretrained(save_dir)
-onnx_clx = pipeline("text-classification", model=model, tokenizer=tokenizer, accelerator="ort")
-text = "I like the new ORT pipeline"
-pred = onnx_clx(text)
+optimized_model = ORTModelForSequenceClassification.from_pretrained(save_dir + "-quantized")
+optimized_model.push_to_hub(save_dir + "-quantized", "00BER/imbd-roberta-base-sentiment-onxx-latest")
+
+classification_pipeline = pipeline("text-classification", model=optimized_model, tokenizer=tokenizer)
+text = "What a lovely day!"
+pred = classification_pipeline(text)
 print(pred)
