@@ -62,6 +62,7 @@ def parse_args():
 # Constants
 ########################################################################
 CUTOFF_LENGTH = 256
+
 # SENTIMENT <---> Class ID mappings
 sentiments = ['positive', "negative"]
 ID2SENT = { idx: sentiment for idx, sentiment in enumerate(sorted(sentiments)) }
@@ -73,6 +74,7 @@ print("-" * 50)
 print(f"ID to sentiment: {ID2SENT}")
 print(f"Sentiment to ID: {SENT2ID}")
 print("=" * 50)
+
 LABEL_COLUMN = "labels"
 TEXT_COLUMN = "text"
 
@@ -85,6 +87,7 @@ recall = evaluate.load("recall")
 f1 = evaluate.load("f1")
 
 def get_dataset(args):
+    print("\n############################# GET DATASET ####################################")
     dataset = load_dataset("csv", data_files=args.csv_path, split="train")
     dataset = dataset.class_encode_column("sentiment")
     dataset = dataset.align_labels_with_mapping(SENT2ID, "sentiment")
@@ -116,10 +119,10 @@ def get_dataset(args):
         val_dataset.to_json(val_filepath)
         test_dataset.to_json(test_filepath)
         print(f"Train, val, test datasets saved to:\nTrain: {train_filepath}\nVal: {val_filepath}\nTest: {test_filepath}")
-
     return train_dataset, val_dataset, test_dataset
 
 def get_model(args):
+    print("\n############################## GET MODEL #####################################")
     tokenizer = AutoTokenizer.from_pretrained(args.base_model, add_prefix_space=True)
     model = AutoModelForSequenceClassification.from_pretrained(
         args.base_model, 
@@ -137,7 +140,6 @@ def get_model(args):
     )
     model = get_peft_model(model, peft_config)
     model.print_trainable_parameters()
-
     return model, tokenizer
 
 # Tokenize and prepare dataset
@@ -175,6 +177,7 @@ def train(
         model,
         data_collator
 ):
+    print("\n############################## TRAINING #####################################")
     training_args = TrainingArguments(
         output_dir=args.out_dir,
         learning_rate=args.learning_rate,
@@ -210,6 +213,8 @@ def train(
         if not args.hf_repository:
             raise Exception("Invalid argument! --push-to-hub was set to True but --hf-repository was not set.")
         model.push_to_hub(args.hf_repository)
+
+    print("\nTraining Complete!")
 
 
 if __name__ == "__main__":
