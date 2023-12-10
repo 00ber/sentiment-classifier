@@ -1,0 +1,31 @@
+version: "3.5"
+services:
+  pred-backend:
+    image: sentiment-classification-backend:latest
+    ports:
+      - "3001:5000"
+    volumes:
+      - ./backend/src:/app
+    networks:
+      - sentiment-classification
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+  
+  pred-frontend:
+    image: sentiment-classification-frontend:latest
+    command: npm run start-dev
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend/src:/app/src
+    networks:
+      - sentiment-classification
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+
+networks:
+  sentiment-classification:

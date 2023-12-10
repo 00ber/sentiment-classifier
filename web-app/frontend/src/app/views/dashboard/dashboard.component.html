@@ -1,0 +1,45 @@
+<c-card class="mb-4">
+  <c-card-header>
+    <h2 class="card-title mb-0" id="forecasts">Sentiment Analyzer</h2>
+  </c-card-header>
+  <c-card-body>
+    <c-row>
+      <c-col>
+        <form cForm>
+          <div class="mb-3">
+            <textarea cFormControl name="userInput" [(ngModel)]="userInput" rows="3"></textarea>
+          </div>
+        </form>
+      </c-col>
+    </c-row>
+    <c-row>
+      <c-col>
+          <button cButton color="dark" shape="rounded-pill" id="submitBtn" (click)="analyze()">Analyze</button>
+          <button cButton color="dark" shape="rounded-pill" id="clearBtn" (click)="clearInputs()">Clear</button>
+      </c-col>
+    </c-row>
+    <c-callout *ngIf="!!displayPrediction" color="{{ displayClass }}">{{ prediction }}</c-callout>
+  </c-card-body>
+</c-card>
+
+<c-card>
+  <c-card-header>
+    <h2 class="card-title mb-0" id="table-title">Last 10 Prediction Results</h2>
+  </c-card-header>
+  <c-card-body>
+        <table [striped]="true" cTable>
+          <thead>
+          <tr>
+            <th scope="col"><strong>Text</strong></th>
+            <th scope="col"><strong>Prediction</strong></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let row of tableRows$ | async">
+            <td>{{ row.text }}</td>
+            <td>{{ row.prediction }}</td>
+          </tr>
+          </tbody>
+        </table>
+  </c-card-body>
+</c-card>
