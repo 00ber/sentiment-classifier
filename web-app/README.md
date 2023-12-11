@@ -1,1 +1,1 @@
-MSML 602 Assignments/Projects
+Web application for the sentiment classification project
