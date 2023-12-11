@@ -6,10 +6,19 @@
 - **Dataset:** [IMDB Dataset of 50K Movie Reviews dataset](https://www.kaggle.com/datasets/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews) from Kaggle
 - **Number of epochs trained:** 4
 - **Evaluation Metrics**:
+  
 ![Training stats](./docs/training.png "Training stats")
 
-## Optimization Results:
+## Optimization:
 
+### Details:
+- Used Optimum(Huggingface) to convert model to ONXX and used the ORTOptimizer to perform the following optimizations ([source](https://huggingface.co/docs/optimum/v1.6.4/onnxruntime/usage_guides/optimization)):
+  - basic general optimizations
+  - transformers-specific fusions
+  - Gelu approximation
+  - mixed precision
+
+### Benchmark Results:
 - Total samples for benchmarking: 50000
 - Dataloader batch size: 32
 - GPU: NVIDIA GeForce RTX 2080 Ti (11GB)
@@ -21,19 +30,21 @@
 | Optimized model     |   **144.87 &pm; 1.96**     |
 
 
-## Instructions for training:
+## Instructions:
+
+### Training:
 - Install Python requirements in `training/requirements.txt`
 - Run the `training/notebooks/training-imdb.ipynb`
 
-## Instructions for running the benchmark:
+### Benchmark:
 - Install Python requirements in `training/requirements.txt`
 - Run the `training/notebooks/benchmark.ipynb`
 
-## Instructions for running the live WEB UI demo:
+### Running the live WEB UI demo:
 
-Prerequisites: Docker, Docker Compose, make (optional)
+**Prerequisites:** Docker, Docker Compose, make (optional)
 
-Perform the following inside the `web-app` directory
+*Perform the following inside the `web-app` directory*
 
 **If you have make installed**
 1. Build and run containers
