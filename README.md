@@ -9,6 +9,15 @@
   
 ![Training stats](./docs/training.png "Training stats")
 
+
+You can find the training notebook [here](https://github.com/00ber/sentiment-classifier/blob/main/training/notebooks/training-imdb.ipynb) and the benchmarking notebook [here](https://github.com/00ber/sentiment-classifier/blob/main/training/notebooks/benchmark.ipynb).
+
+The trained and optimized models can be found here:
+- **LoRA:** https://huggingface.co/00BER/imbd-roberta-base-sentiment-lora-latest
+- **LoRA merged to base model**: https://huggingface.co/00BER/imbd-roberta-base-sentiment-merged-latest
+- **ORT Optimized model**: https://huggingface.co/00BER/imbd-roberta-base-sentiment-onxx-latest
+
+
 ## Optimization:
 
 ### Details:
